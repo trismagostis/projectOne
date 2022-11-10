@@ -5,10 +5,10 @@ mongoose.connect('mongodb://localhost:27017/project-one',  {useNewUrlParser: tru
 
 
 const schema = new mongoose.Schema({
-    firstName: {type: String, required: true},
-    surName: {type: String, required: true},
-    course: {type: String, required: true},
-    localization:{type: String, required: true}
+    firstName: String,
+    surName:  String,
+    course: String,
+    localization:String,
 });
 
 
