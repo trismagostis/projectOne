@@ -1,3 +1,9 @@
 ul {
     list-style: none;
+    color:crimson;
+    margin-left: 1em;
+    
+}
+li {
+    display: flex;
 }

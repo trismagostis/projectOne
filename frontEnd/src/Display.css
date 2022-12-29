@@ -1,0 +1,15 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    background-color:#00FF00;
+  }
+  th, td {
+    padding: 10px;
+  }
+  table {
+    margin-left: 1em;
+  
+  }
+  button {
+    background-color: crimson;
+  }

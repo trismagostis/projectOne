@@ -1,20 +1,24 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Display from "./Display";
 import DisplayError from "./DisplayError";
+import "./Registration.css";
+
 function Registration() {
   const [listDisplay, setListDisplay] = useState([]);
+
   let registrationRef = {
     firstName: useRef(0),
     surName: useRef(0),
     course: useRef(0),
     localization: useRef(0),
   };
+
   const [formData, setFormData] = useState({
     firstName: "",
     surName: "",
-    course: "",
-    localization: "",
+    course: "---",
+    localization: "---",
   });
 
   const [errors, setErrors] = useState({
@@ -23,6 +27,15 @@ function Registration() {
     course: "",
     localization: "",
   });
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  useEffect(() => {
+    console.log("uaktualniono listDisplay");
+  }, [listDisplay]);
+
   const validate = (formData) => {
     let validationErrors = {
       firstname: false,
@@ -79,6 +92,7 @@ function Registration() {
 
     if (formData.course === "---") {
       validationErrors.course = true;
+      console.log("course");
       setErrors((prevErrors) => {
         return {
           ...prevErrors,
@@ -112,11 +126,22 @@ function Registration() {
     );
   };
 
+  const fetchList = () => {
+    axios
+      .get("http://localhost:8080/api/all")
+      .then((res) => {
+        setListDisplay(res.data);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formData);
     console.log(validate(formData));
-    
+
     if (validate(formData)) {
       axios
         .post("http://localhost:8080/api/add", {
@@ -128,22 +153,15 @@ function Registration() {
         // .then(function (response) {
         //   console.log(response);
         // })
+        .then(function () {
+          fetchList();
+        })
         .catch(function (error) {
           console.log(error);
-        })
-        .then(function () {
-          axios
-            .get("http://localhost:8080/api/all")
-
-            .catch((error) => {
-              console.log("Error:", error);
-            })
-            .then((res) => {
-              setListDisplay(res.data);
-            });
         });
     }
   };
+
   const handleInputChange = (e) => {
     const target = e.target;
     const name = target.name;
@@ -211,7 +229,10 @@ function Registration() {
             <option>online</option>
           </select>
         </label>
-        <button type="submit">send</button>
+        <label>
+          Wyślij dane
+          <button type="submit" className="send">send</button>
+        </label>
       </form>
       <DisplayError errorDisplay={errors} />
       <Display listDisplay={listDisplay} removeUserMethod={removeElement} />
